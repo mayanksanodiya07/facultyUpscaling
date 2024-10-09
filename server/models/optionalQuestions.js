@@ -1,10 +1,5 @@
 const mongoose = require('mongoose');
-mongoose.connect("mongodb://localhost:27017/Project").then(() => {
-    console.log("Database Connected Successfully");
-})
-.catch(() => {
-    console.log("Database cannot be Connected");
-})
+
 // Create Optional Questions Schema
 const OptionalQuestionsSchema = new mongoose.Schema({
     userId:{
