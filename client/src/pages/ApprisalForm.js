@@ -55,7 +55,7 @@ const facultyAppraisalQuestions = [
     code: "Q8",
     question:
       "Do you participate in curriculum development at your institution?",
-    answers: ["Yes", "No"],
+    answers: ["Yes", "No "],
   },
   {
     code: "Q9",
