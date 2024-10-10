@@ -34,101 +34,101 @@ const loginDetails = {
         required: true,
       },
     },
-    // professional_information: {
-    //   // "employee_code": {
-    //   //   "label": "Employee Code",
-    //   //   "type": "text",
-    //   //   "required": true
-    //   // },
-    //   designation: {
-    //     label: "Designation",
-    //     type: "select",
-    //     options: [
-    //       "Professor",
-    //       "Assistant Professor",
-    //       "Associate Professor",
-    //       "Lecturer",
-    //     ],
-    //     required: true,
-    //   },
-    //   department: {
-    //     label: "Department",
-    //     type: "text",
-    //     required: true,
-    //   },
-    //   date_of_joining: {
-    //     label: "Date of Joining",
-    //     type: "date",
-    //     required: true,
-    //   },
-    //   qualification: {
-    //     label: "Qualification",
-    //     type: "text",
-    //     required: true,
-    //   },
-    //   specialization: {
-    //     label: "Specialization",
-    //     type: "text",
-    //     required: false,
-    //   },
-    // },
-    // address_details: {
-    //   residential_address: {
-    //     label: "Residential Address",
-    //     type: "text",
-    //     required: false,
-    //   },
-    //   city: {
-    //     label: "City",
-    //     type: "text",
-    //     required: true,
-    //   },
-    //   state: {
-    //     label: "State",
-    //     type: "text",
-    //     required: true,
-    //   },
-    //   country: {
-    //     label: "Country",
-    //     type: "text",
-    //     required: true,
-    //   },
-    // },
-    // "account_security": {
-    //   // "password": {
-    //   //   "label": "Password",
-    //   //   "type": "password",
-    //   //   "required": true
-    //   // },
-    //   "security_question": {
-    //     "label": "Security Question",
-    //     "type": "select",
-    //     "options": ["What is your mother's maiden name?", "What was your first pet's name?", "What was the name of your first school?"],
-    //     "required": true
-    //   },
-    //   "security_answer": {
-    //     "label": "Security Answer",
-    //     "type": "text",
-    //     "required": true
-    //   }
-    // },
-    // optional_questions: {
-    //   social_media_links: {
-    //     label: "Social Media Links",
-    //     type: "url",
-    //     required: false,
-    //   },
-    //   research_interests: {
-    //     label: "Research Interests",
-    //     type: "text",
-    //     required: false,
-    //   },
-    //   publications: {
-    //     label: "Publications",
-    //     type: "text",
-    //     required: false,
-    //   },
-    // },
+    professional_information: {
+      // "employee_code": {
+      //   "label": "Employee Code",
+      //   "type": "text",
+      //   "required": true
+      // },
+      designation: {
+        label: "Designation",
+        type: "select",
+        options: [
+          "Professor",
+          "Assistant Professor",
+          "Associate Professor",
+          "Lecturer",
+        ],
+        required: true,
+      },
+      department: {
+        label: "Department",
+        type: "text",
+        required: true,
+      },
+      date_of_joining: {
+        label: "Date of Joining",
+        type: "date",
+        required: true,
+      },
+      qualification: {
+        label: "Qualification",
+        type: "text",
+        required: true,
+      },
+      specialization: {
+        label: "Specialization",
+        type: "text",
+        required: false,
+      },
+    },
+    address_details: {
+      residential_address: {
+        label: "Residential Address",
+        type: "text",
+        required: false,
+      },
+      city: {
+        label: "City",
+        type: "text",
+        required: true,
+      },
+      state: {
+        label: "State",
+        type: "text",
+        required: true,
+      },
+      country: {
+        label: "Country",
+        type: "text",
+        required: true,
+      },
+    },
+    "account_security": {
+      // "password": {
+      //   "label": "Password",
+      //   "type": "password",
+      //   "required": true
+      // },
+      "security_question": {
+        "label": "Security Question",
+        "type": "select",
+        "options": ["What is your mother's maiden name?", "What was your first pet's name?", "What was the name of your first school?"],
+        "required": true
+      },
+      "security_answer": {
+        "label": "Security Answer",
+        "type": "text",
+        "required": true
+      }
+    },
+    optional_questions: {
+      social_media_links: {
+        label: "Social Media Links",
+        type: "url",
+        required: false,
+      },
+      research_interests: {
+        label: "Research Interests",
+        type: "text",
+        required: false,
+      },
+      publications: {
+        label: "Publications",
+        type: "text",
+        required: false,
+      },
+    },
   },
 };
 

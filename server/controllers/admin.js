@@ -1,10 +1,5 @@
+const adminSchema = require("../models/admin");
 const facultySchema = require("../models/faculty");
-const basicInformationSchema = require("../models/basicInformation");
-const professionalInformationSchema = require("../models/professionalInformation");
-const addressDetailsSchema = require("../models/addressDetails");
-const accountSecuritySchema = require("../models/accountSecurity");
-const optionalQuestionsSchema = require("../models/optionalQuestions");
-const apprisalSchema = require("../models/apprisal");
 const bcrypt = require("bcrypt");
 
 const insertAllDetails = async (req, res) => {
@@ -56,55 +51,56 @@ const insertAllDetails = async (req, res) => {
   }
 };
 
-async function handleFacultyLogin(req, res) {
+async function handleAdminLogin(req, res) {
   const { username, password } = req.body;
-console.log(req.body)
-  const existingUser = await facultySchema.findOne({ username: username });
+  // console.log(req.body)
+  const existingAdmin = await adminSchema.findOne({ username: username });
   // res.send(existingUser);
-  if (existingUser) {
+  if (existingAdmin) {
     const isPasswordMatch = await bcrypt.compare(
-      req.body.password,
-      existingUser.password
+      password,
+      existingAdmin.password
     );
     if (isPasswordMatch) {
       // return res.status(400).send("User already exists!");
       console.log("Logged in successfully");
-      const objId = await existingUser._id;
-      await facultySchema.findByIdAndUpdate(existingUser._id, { lastUpdate: Date.now() });
-      res.status(200).send(`Logged in successfully, objID : ${objId}`);
+      const objId = await existingAdmin._id;
+      const username = await existingAdmin.username;
+      res.status(200).send({objId, username});
     } else {
       console.log("password not match");
+      res.status(400).send(`user not exist`);
     }
   } else {
     console.log("no user exist");
+    res.status(400).send(`user not exist`);
   }
 }
 
-async function handleFacultySignup(req, res) {
+async function handleAdminSignup(req, res) {
   const { username, password } = req.body;
-  const loginData = req.body;
+  // const loginData = req.body;
+  console.log(req.body)
 
-  const existingUser = await facultySchema.findOne({ username: username });
+  const existingAdmin = await adminSchema.findOne({ username: username });
 
-  if (existingUser) {
-    return res.status(400).send("User already exists!");
+  if (existingAdmin) {
+    return res.status(400).send("Username already exists!");
   } else {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    await facultySchema.insertMany([{ username, password: hashedPassword }]);
+    await adminSchema.insertMany([{ username, password: hashedPassword }]);
+    // const admin = new adminSchema({username, password});
+    // await admin.save();
     res.send("Successful");
   }
 }
 
-async function handlePostFacultyProfile(req, res) {
-  const userid = req.params.id;
-  const existingUser = await facultySchema.findOne({ _id: userid });
-  if (existingUser) {
-    insertAllDetails(req, res);
-  } else {
-    console.log("no user exist");
-  }
+async function handleFaculties(req, res) {
+  const faculties = await facultySchema.find().select('-password');
+  console.log(faculties);
+  res.status(200).send(faculties);
 }
 
 async function handleGetFacultyProfile(req, res) {
@@ -161,9 +157,10 @@ async function handleFacultyAppraisal(req, res) {
 }
 
 module.exports = {
-  handleFacultyLogin,
-  handleFacultySignup,
-  handlePostFacultyProfile,
-  handleFacultyAppraisal,
-  handleGetFacultyProfile,
+  handleAdminLogin,
+  handleAdminSignup,
+  handleFaculties
+  // handlePostFacultyProfile,
+  // handleFacultyAppraisal,
+  // handleGetFacultyProfile,
 };

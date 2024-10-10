@@ -1,38 +1,26 @@
-import { useEffect, useState } from "react";
 import FacultyStrip from "./FacultyStrip";
-import axios from "axios";
 
-function FacultyList() {
-  const [faculties, setFaculties] = useState([]);
-  const [facultiesData, setFacultiesData] = useState([]);
-  // const [usersData, setUsersData] = useLocalStorageState([], "UserData");
-  // console.log("admin:", usersData);
-
-  const fetchFacultiesData = (faculties) => {
-    // faculties.map((faculty) => fetchFacultyData(faculty));
-  };
-
-  const fetchFacultyData = async (faculty) => {
-    // await axios.get(`http://localhost:5000/faculty-list`);
-  };
-
-  useEffect(() => {
-    async function fetchFaculty() {
-      const response = await axios.get(`http://localhost:5000/faculty-list`);
-      setFaculties(response.data);
-      
-    }
-    fetchFaculty();
-  }, []);
-
+function FacultyList({ faculties }) {
+  const sortedFaculties = faculties?.sort((a, b) => {
+    return new Date(b.lastUpdate) - new Date(a.lastUpdate);
+  });
+  console.log(sortedFaculties)
   return (
-    <>
-      <ul className="mx-60 mt-10 mb-28 list-none">
-        {faculties.map((faculty, index) => (
+    <table className="mt-7 mb-10 list-none border-collapse w-full">
+      <thead>
+        <tr className="bg-gray-200">
+          <th className="py-3 px-2 border">Faculty Name</th>
+          <th className="py-3 px-2 border">Designation</th>
+          <th className="py-3 px-2 border">Last Update</th>
+          <th className="py-3 px-2 border">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {faculties?.map((faculty, index) => (
           <FacultyStrip key={index} faculty={faculty} />
         ))}
-      </ul>
-    </>
+      </tbody>
+    </table>
   );
 }
 

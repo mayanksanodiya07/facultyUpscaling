@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import { useState } from "react";
 import axios from "axios";
@@ -8,17 +8,19 @@ function SignupPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password === confirmPassword) {
       try {
-        const res = await axios.post("http://localhost:5000/signup", {
+        const res = await axios.post("http://localhost:5000/faculty/signup", {
           username: username,
           password: password,
         });
         // console.log("asasa", res.data);
         // alert("Data sent!");
+        navigate("/faculty/login")
       } catch (err) {
         console.error("error", err?.response?.data);
         console.error("error..............");
@@ -63,7 +65,7 @@ function SignupPage() {
         <p className="w-fit mx-auto mt-2">
           click here for{" "}
           <Link
-            to={"/login"}
+            to={"/faculty/login"}
             className="underline text-blue-500 cursor-pointer"
           >
             Login

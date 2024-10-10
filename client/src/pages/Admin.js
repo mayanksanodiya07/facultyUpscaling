@@ -1,28 +1,42 @@
-import { useEffect, useState } from "react";
+import { Nav } from "react-bootstrap";
 import NavBar from "../components/NavBar";
+import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Outlet } from "react-router-dom";
-// import Section from "../components/Section";
-// import { useLocalStorageState } from "../hooks/useLocalStorageState";
+import { useState, useEffect } from "react";
+import Cookies from 'js-cookie';
 
 function Admin() {
-  const [facultiesData, setFacultiesData] = useState([]);
-  // const [usersData, setUsersData] = useLocalStorageState([], "UserData");
-  // console.log("admin:", usersData);
+  const [username, setUsername] = useState(Cookies.get('username'));
 
-  // useEffect(() => {
-  //   async function fetchFaculty() {
-  //     const res = await fetch("http://localhost:8000/faculty");
-  //     const faculties = await res.json();
-  //     setFacultiesData(faculties);
-  //     console.log(faculties);
-  //   }
-  //   fetchFaculty();
-  // }, []);
+  useEffect(() => {
+    const checkCookie = () => {
+      const updatedUsername = Cookies.get('username');
+      if (updatedUsername !== username) {
+        setUsername(updatedUsername);
+      }
+    };
+
+    checkCookie();
+
+    const interval = setInterval(checkCookie, 1000); 
+
+    return () => clearInterval(interval);
+  }, [username]);
 
   return (
     <>
-      <NavBar />
-      <Outlet/>
+      <NavBar>
+        {username && (
+          <Nav>
+            <div className="text-white flex items-center text-base">
+              <FontAwesomeIcon icon={faCircleUser} className="pt-1.5 pr-1" />
+              <p>{username}</p>
+            </div>
+          </Nav>
+        )}
+      </NavBar>
+      <Outlet />
     </>
   );
 }

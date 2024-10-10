@@ -2,6 +2,7 @@ const express = require("express");
 const { connectToMongoDB } = require("./connect");
 
 const facultyRoute = require("./routes/faculty");
+const adminRoute = require("./routes/admin");
 
 const path = require("path");
 // const BasicInformation = require("./BasicInformationSchema");
@@ -9,9 +10,9 @@ const path = require("path");
 // const AddressDetails = require("./AddressDetailsSchema");
 // const AccountSecurity = require("./AccountSecuritySchema");
 // const OptionalQuestions = require("./OptionalQuestionsSchema");
-const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt");
 const cors = require("cors");
-const { Collection } = require("mongoose");
+// const { Collection } = require("mongoose");
 
 const port = 5000;
 
@@ -24,6 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/faculty", facultyRoute);
+app.use("/admin", adminRoute);
 
 
 
@@ -64,22 +66,22 @@ app.get("/", (req, res) => {
 //   }
 // });
 
-app.post("/signup", async (req, res) => {
-  const { username, password } = req.body;
-  const loginData = req.body;
+// app.post("/signup", async (req, res) => {
+//   const { username, password } = req.body;
+//   const loginData = req.body;
 
-  const existingUser = await collection.findOne({ username: username });
+//   const existingUser = await collection.findOne({ username: username });
 
-  if (existingUser) {
-    return res.status(400).send("User already exists!");
-  } else {
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+//   if (existingUser) {
+//     return res.status(400).send("User already exists!");
+//   } else {
+//     const saltRounds = 10;
+//     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    await collection.insertMany([{ username, password: hashedPassword }]);
-    res.send("Successful");
-  }
-});
+//     await collection.insertMany([{ username, password: hashedPassword }]);
+//     res.send("Successful");
+//   }
+// });
 
 
 

@@ -1,24 +1,32 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import Button from "../components/Button";
 import { useState } from "react";
 import axios from "axios";
+import Cookies from 'js-cookie';
 
-function LoginPage() {
-  const navigate= useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+function AdminLogin() {
+  const navigate = useNavigate();
+  // // const { setAdminData } = useOutletContext();
+  // console.log(useOutletContext());
+
+  const [username, setUsername] = useState("mayankadmin");
+  const [password, setPassword] = useState("123");
   const [loginStatus, setLoginStatus] = useState("");
   // const [error, setError] = useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/faculty/login", {
+      const res = await axios.post("http://localhost:5000/admin/login", {
         username: username,
         password: password,
       });
-      setLoginStatus("logged in Successfully")
-      navigate(`/faculty/faculty-profile/${res.data.objId}`)
-      console.log(res.data.objId);
+      const adminData = { username: res.data.username, id: res.data.objId };
+      // setAdminData(adminData);
+      await Cookies.set("id", `${res.data.objId}`);
+      await Cookies.set("username" , `${res.data.username}`);
+      // console.log(res.data.username)
+      // console.log(Cookies.get(`id`))
+      navigate(`/admin/dashboard`, { state: adminData });
     } catch (err) {
       console.error("error", err?.response?.data);
       // setError(err?.response?.data);
@@ -27,7 +35,7 @@ function LoginPage() {
 
   return (
     <div className="mx-auto my-20 w-80 px-4 py-4 border-2 rounded-3xl flex flex-col items-center">
-      <h1 className="font-bold text-2xl mb-3 text-[#FE444F]">Faculty Login</h1>
+      <h1 className="font-bold text-2xl mb-3 text-[#FE444F]">Admin Login</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col items-center">
         <input
@@ -54,7 +62,7 @@ function LoginPage() {
         <p className="w-fit mx-auto mt-2">
           click here for{" "}
           <Link
-            to={"/faculty/signup"}
+            to={"/admin/signup"}
             className="underline text-blue-500 cursor-pointer"
           >
             SignUp
@@ -64,4 +72,4 @@ function LoginPage() {
     </div>
   );
 }
-export default LoginPage;
+export default AdminLogin;

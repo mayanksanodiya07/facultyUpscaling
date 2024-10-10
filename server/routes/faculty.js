@@ -16,7 +16,7 @@ router.post("/login", handleFacultyLogin);
 router.post("/signup", handleFacultySignup);
 router.get("/profile/:id", handleGetFacultyProfile);
 router.post("/profile/:id", handlePostFacultyProfile);
-router.post("/appraisal", handleFacultyAppraisal);
+router.post("/apprisal", handleFacultyAppraisal);
 
 
 module.exports = router;

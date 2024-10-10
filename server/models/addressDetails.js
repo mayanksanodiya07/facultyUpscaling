@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Create Address Details Schema
 const AddressDetailsSchema = new mongoose.Schema({
     userId:{
         type:String

@@ -3,32 +3,35 @@ import Button from "../components/Button";
 import { useState } from "react";
 import axios from "axios";
 
-function LoginPage() {
-  const navigate= useNavigate();
+function AdminSignup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loginStatus, setLoginStatus] = useState("");
-  // const [error, setError] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
+    // console.log("hello")
     e.preventDefault();
-    try {
-      const res = await axios.post("http://localhost:5000/faculty/login", {
-        username: username,
-        password: password,
-      });
-      setLoginStatus("logged in Successfully")
-      navigate(`/faculty/faculty-profile/${res.data.objId}`)
-      console.log(res.data.objId);
-    } catch (err) {
-      console.error("error", err?.response?.data);
-      // setError(err?.response?.data);
+    if (password === confirmPassword) {
+      try {
+        const res = await axios.post("http://localhost:5000/admin/signup", {
+          username: username,
+          password: password,
+        });
+        // console.log("asasa", res.data);
+        // alert("Data sent!");
+        navigate("/admin/login")
+      } catch (err) {
+        console.error("error", err?.response?.data);
+        console.error("error..............");
+        setError(err?.response?.data);
+      }
     }
   };
 
   return (
     <div className="mx-auto my-20 w-80 px-4 py-4 border-2 rounded-3xl flex flex-col items-center">
-      <h1 className="font-bold text-2xl mb-3 text-[#FE444F]">Faculty Login</h1>
-
+      <h1 className="font-bold text-2xl mb-3 text-[#FE444F]">Faculty Signup</h1>
       <form onSubmit={handleSubmit} className="flex flex-col items-center">
         <input
           className="py-1 px-3 mb-3 w-full border rounded-full"
@@ -47,21 +50,29 @@ function LoginPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        <input
+          className="py-1 px-3 ml-1 mb-3 w-full border rounded-full"
+          type="password"
+          id="password"
+          placeholder="Confirm password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
         <span className="">
-          <Button type={"small"}>Login</Button>
+          <Button type={"small"}>SignUp</Button>
         </span>
-        <p>{loginStatus}</p>
+        <p>{error}</p>
         <p className="w-fit mx-auto mt-2">
           click here for{" "}
           <Link
-            to={"/faculty/signup"}
+            to={"/admin/login"}
             className="underline text-blue-500 cursor-pointer"
           >
-            SignUp
+            Login
           </Link>
         </p>
       </form>
     </div>
   );
 }
-export default LoginPage;
+export default AdminSignup;

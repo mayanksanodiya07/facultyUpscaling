@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 // console.log(mongoose)
 
 // Create Schema
-const Loginschema = new mongoose.Schema({
+const Facultyschema = new mongoose.Schema({
   username: {
     type: String,
     // required: true
@@ -10,6 +10,10 @@ const Loginschema = new mongoose.Schema({
   password: {
     type: String,
     // required: true
+  },
+  lastUpdate: {
+    type: Date,
+    default: Date.now,
   },
   basicInfo: {
     type: mongoose.Schema.Types.ObjectId,
@@ -31,8 +35,12 @@ const Loginschema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "OptionalQuestions",
   },
+  apprisalResponses: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Apprisal",
+  },
 });
 
-const collection = new mongoose.model("faculties", Loginschema);
+const collection = new mongoose.model("Faculties", Facultyschema);
 
 module.exports = collection;
