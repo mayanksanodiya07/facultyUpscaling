@@ -2,9 +2,10 @@ import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 import Button from "../components/Button";
 import NavBar from "../components/NavBar";
 import Section from "../components/Section";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 function Homepage() {
+  const navigate = useNavigate();
   // const [isLogin, setIsLogin] = useState(true);
 
   return (
@@ -17,8 +18,8 @@ function Homepage() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="#features">Features</Nav.Link>
-            <Nav.Link href="#pricing">Pricing</Nav.Link>
-            <NavDropdown title="Dropdown" id="collapsible-nav-dropdown">
+            <Nav.Link onClick={()=>{navigate("/aboutus")}} >AboutUs</Nav.Link>
+            {/* <NavDropdown title="Dropdown" id="collapsible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
                 Another action
@@ -28,7 +29,7 @@ function Homepage() {
               <NavDropdown.Item href="#action/3.4">
                 Separated link
               </NavDropdown.Item>
-            </NavDropdown>
+            </NavDropdown> */}
           </Nav>
           <Nav>
             <Button type={"small"} to={"/login"}>

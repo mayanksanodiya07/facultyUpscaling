@@ -1,14 +1,38 @@
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "./Button";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function FacultyStrip({ faculty }) {
+  const [facultyDetails, setFacultyDetails] = useState(null);
+  const [error, setError] = useState(null);
+
   const dateOnly = faculty.lastUpdate
     ? new Date(faculty.lastUpdate).toISOString().split("T")[0]
     : null;
 
-    
-  // console.log(dateOnly);
+  useEffect(() => {
+    const fetchFacultyDetails = async () => {
+      try {
+        const { data } = await axios.get(
+          `http://localhost:5000/faculty/profile/${faculty._id}`
+        );
+        setFacultyDetails(data);
+      } catch (err) {
+        setError("Error fetching user details");
+        console.error(err);
+      } finally {
+        // setFacultyDetails(false);
+      }
+    };
+
+    fetchFacultyDetails();
+  }, [faculty._id]);
+
+  const designation = facultyDetails?.professionalInfo?.designation || "N/A";
+  const department = facultyDetails?.professionalInfo?.department || "N/A";
+  // console.log(facultyDetails.professionalInfo);
 
   return (
     <tr className="border-t border-b border-gray-300 hover:bg-[#f8f8f8] w-full">
@@ -26,16 +50,15 @@ function FacultyStrip({ faculty }) {
       </td>
       <td className="hidden lg:table-cell py-3 px-2">
         <div className="flex flex-col">
-          <span className="truncate">Designation</span>
-          <span className="truncate">Department</span>
+          <span className="truncate">{designation || "N/A"}</span>
+          <span className="truncate">{department || "N/A"}</span>
         </div>
       </td>
       <td className="hidden lg:table-cell py-3 px-2">
-       
         <span className="truncate">{dateOnly}</span>
       </td>
       <td className="py-3 px-2">
-        <Button to={"profile"} type={"profile"}>
+        <Button to={`/admin/faculty/${faculty._id}/profile`} type={"profile"}>
           View Profile
         </Button>
       </td>

@@ -3,9 +3,12 @@ const mongoose = require("mongoose");
 
 // Create Schema
 const Facultyschema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: true
+  },
   username: {
     type: String,
-    // required: true
   },
   password: {
     type: String,
@@ -14,6 +17,10 @@ const Facultyschema = new mongoose.Schema({
   lastUpdate: {
     type: Date,
     default: Date.now,
+  },
+  verified: {
+    type: Boolean,
+    default: false,
   },
   basicInfo: {
     type: mongoose.Schema.Types.ObjectId,

@@ -7,11 +7,14 @@ const optionalQuestionsSchema = require("../models/optionalQuestions");
 const apprisalSchema = require("../models/apprisal");
 const bcrypt = require("bcrypt");
 
+const { spawn } = require("child_process");
+const Appraisal = require("../models/apprisal");
+
 const insertAllDetails = async (req, res) => {
   try {
     const { formData } = req.body;
     const userId = req.params.id;
-    // console.log("id" , req.params.id)
+    console.log(req.body);
     const {
       basic_information,
       professional_information,
@@ -58,7 +61,7 @@ const insertAllDetails = async (req, res) => {
 
 async function handleFacultyLogin(req, res) {
   const { username, password } = req.body;
-console.log(req.body)
+  console.log(req.body);
   const existingUser = await facultySchema.findOne({ username: username });
   // res.send(existingUser);
   if (existingUser) {
@@ -70,7 +73,9 @@ console.log(req.body)
       // return res.status(400).send("User already exists!");
       console.log("Logged in successfully");
       const objId = await existingUser._id;
-      await facultySchema.findByIdAndUpdate(existingUser._id, { lastUpdate: Date.now() });
+      await facultySchema.findByIdAndUpdate(existingUser._id, {
+        lastUpdate: Date.now(),
+      });
       res.status(200).send(`Logged in successfully, objID : ${objId}`);
     } else {
       console.log("password not match");
@@ -81,19 +86,23 @@ console.log(req.body)
 }
 
 async function handleFacultySignup(req, res) {
-  const { username, password } = req.body;
-  const loginData = req.body;
-
-  const existingUser = await facultySchema.findOne({ username: username });
-
-  if (existingUser) {
-    return res.status(400).send("User already exists!");
-  } else {
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    await facultySchema.insertMany([{ username, password: hashedPassword }]);
+  const { email, password, loggedInByGoogle } = req.body;
+  // const loginData = req.body;
+  if (loggedInByGoogle) {
+    await facultySchema.insertMany([{ email}]);
     res.send("Successful");
+  } else {
+    const existingUser = await facultySchema.findOne({ email });
+
+    if (existingUser) {
+      return res.status(400).send("User already exists!");
+    } else {
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+      await facultySchema.insertMany([{ email, password: hashedPassword }]);
+      res.send("Successful");
+    }
   }
 }
 
@@ -109,7 +118,7 @@ async function handlePostFacultyProfile(req, res) {
 
 async function handleGetFacultyProfile(req, res) {
   const userId = req.params.id;
-
+  // console.log(userId);
   try {
     const facultyWithProfile = await facultySchema
       .findById(userId)
@@ -121,11 +130,11 @@ async function handleGetFacultyProfile(req, res) {
         { path: "optionalQuestionsInfo" },
       ]);
     const userDetails = {
-      basicInfo: facultyWithProfile.basicInfo._doc,
-      professionalInfo: facultyWithProfile.professionalInfo._doc,
-      addressInfo: facultyWithProfile.addressInfo._doc,
-      accountSecurityInfo: facultyWithProfile.accountSecurityInfo._doc,
-      optionalQuestionsInfo: facultyWithProfile.optionalQuestionsInfo._doc,
+      basicInfo: facultyWithProfile?.basicInfo?._doc,
+      professionalInfo: facultyWithProfile?.professionalInfo?._doc,
+      addressInfo: facultyWithProfile?.addressInfo?._doc,
+      accountSecurityInfo: facultyWithProfile?.accountSecurityInfo?._doc,
+      optionalQuestionsInfo: facultyWithProfile?.optionalQuestionsInfo?._doc,
     };
     res.status(200).send(userDetails);
   } catch (error) {
@@ -154,9 +163,44 @@ async function handleFacultyAppraisal(req, res) {
         },
         { new: true }
       );
+
+      const pythonProcess = spawn("python", ["script.py"]);
+
+      pythonProcess.stdout.on("data", (data) => {
+        console.log(`stdout: ${data}`);
+      });
+
+      // Capture stderr (standard error) and log it
+      pythonProcess.stderr.on("data", (data) => {
+        console.error(`stderr: ${data}`);
+      });
+
+      // Log if there is an error spawning the Python process
+      pythonProcess.on("error", (error) => {
+        console.error(`Error running Python script: ${error}`);
+      });
+
+      // Log when the process closes
+      pythonProcess.on("close", (code) => {
+        console.log(`Python process exited with code ${code}`);
+      });
     } else {
       console.log("no user exist");
     }
+  } catch {}
+}
+
+async function handleFacultyRec(req, res) {
+  const userid = req.params.id;
+
+  try {
+    const existingUser = await facultySchema.findOne({ _id: userid });
+
+    const responses = await apprisalSchema.findById(
+      existingUser.apprisalResponses
+    );
+    console.log("QQQQ", responses.Recommendations);
+    res.send(responses.Recommendations);
   } catch {}
 }
 
@@ -166,4 +210,5 @@ module.exports = {
   handlePostFacultyProfile,
   handleFacultyAppraisal,
   handleGetFacultyProfile,
+  handleFacultyRec,
 };

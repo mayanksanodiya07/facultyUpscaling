@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
+import OrAuth from "../components/OrAuth";
 import Button from "../components/Button";
 import { useState } from "react";
 import axios from "axios";
 
 function SignupPage() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -15,7 +16,7 @@ function SignupPage() {
     if (password === confirmPassword) {
       try {
         const res = await axios.post("http://localhost:5000/faculty/signup", {
-          username: username,
+          email: email,
           password: password,
         });
         // console.log("asasa", res.data);
@@ -36,16 +37,18 @@ function SignupPage() {
         <input
           className="py-1 px-3 mb-3 w-full border rounded-full"
           type="text"
-          id="username"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          id="email"
+          name="email"
+          placeholder="E-mail address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         <input
           className="py-1 px-3 mb-3 w-full border rounded-full"
           type="password"
           id="password"
+          name="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -71,6 +74,9 @@ function SignupPage() {
             Login
           </Link>
         </p>
+        <div className="w-full mt-3">
+          <OrAuth />
+        </div>
       </form>
     </div>
   );

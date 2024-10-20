@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
+import OrAuth from "../components/OrAuth";
 import { useState } from "react";
 import axios from "axios";
 
 function LoginPage() {
-  const navigate= useNavigate();
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState("");
@@ -16,8 +17,8 @@ function LoginPage() {
         username: username,
         password: password,
       });
-      setLoginStatus("logged in Successfully")
-      navigate(`/faculty/faculty-profile/${res.data.objId}`)
+      setLoginStatus("logged in Successfully");
+      navigate(`/faculty/faculty-profile/${res.data.objId}`);
       console.log(res.data.objId);
     } catch (err) {
       console.error("error", err?.response?.data);
@@ -60,6 +61,14 @@ function LoginPage() {
             SignUp
           </Link>
         </p>
+        <div class="relative flex items-center w-full mt-3">
+          <span class="flex-grow h-px bg-gray-300"></span>
+          <span class="px-2 text-gray-500 text-sm">OR</span>
+          <span class="flex-grow h-px bg-gray-300"></span>
+        </div>
+        <div className="w-full mt-3">
+          <OrAuth />
+        </div>
       </form>
     </div>
   );

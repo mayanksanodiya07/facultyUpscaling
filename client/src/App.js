@@ -7,13 +7,18 @@ import Admin from "./pages/Admin";
 
 import AdminDashboard from "./components/AdminDashboard";
 import ApprisalForm from "./components/ApprisalForm";
-import FacultyList from "./components/FacultyList";
+import FullFacultyList from "./components/FullFacultyList";
 import LoginPage from "./components/LoginPage";
 import SignupPage from "./components/SignupPage";
 import FacultyProfileEdit from "./components/FacultyProfileEdit";
 import FacultyProfileView from "./components/FacultyProfileView";
 import AdminLogin from "./components/AdminLogin";
 import AdminSignup from "./components/AdminSignup";
+import AdminFaculty from "./components/AdminFaculty";
+import AboutUs from "./components/AboutUs";
+import RecomendedCourses from "./components/RecomendedCourses";
+// import NavBar from "../components/NavBar";
+
 // import Loading from "./components/Loading"
 
 function App() {
@@ -21,7 +26,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route index element={<Homepage />} />
-        {/* <Route index element={<Loading /> } /> */}
+        <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/faculty" element={<Faculty />}>
           <Route index element={<Navigate replace to={"login"} />} />
           <Route path="login" element={<LoginPage />} />
@@ -30,6 +35,10 @@ function App() {
           <Route path="profile/edit/:userid" element={<FacultyProfileEdit />} />
           <Route path="profile/new" element={<FacultyProfileEdit />} />
           <Route path="apprisal/:id" element={<ApprisalForm />} />
+          <Route
+            path="recommendedcourses/:id"
+            element={<RecomendedCourses />}
+          />
         </Route>
 
         <Route path="/admin" element={<Admin />}>
@@ -37,7 +46,10 @@ function App() {
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="login" element={<AdminLogin />} />
           <Route path="signup" element={<AdminSignup />} />
-          <Route path="faculty-list" element={<FacultyList />} />
+          <Route path="faculty-list" element={<FullFacultyList />} />
+          <Route path="faculty/:id" element={<AdminFaculty />}>
+            <Route path="profile" element={<FacultyProfileView />} />
+          </Route>
           {/* <Route path="profile" element={<Profile />} /> */}
         </Route>
 
