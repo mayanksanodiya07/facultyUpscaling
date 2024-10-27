@@ -21,7 +21,7 @@ const userVerificationSchema = new mongoose.Schema({
 });
 
 const userVerification = new mongoose.model(
-  "Faculties",
+  "userVerification",
   userVerificationSchema
 );
 

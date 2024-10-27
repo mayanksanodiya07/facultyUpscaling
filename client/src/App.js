@@ -10,6 +10,7 @@ import ApprisalForm from "./components/ApprisalForm";
 import FullFacultyList from "./components/FullFacultyList";
 import LoginPage from "./components/LoginPage";
 import SignupPage from "./components/SignupPage";
+import VerificationPage from "./components/VerificationPage";
 import FacultyProfileEdit from "./components/FacultyProfileEdit";
 import FacultyProfileView from "./components/FacultyProfileView";
 import AdminLogin from "./components/AdminLogin";
@@ -17,6 +18,11 @@ import AdminSignup from "./components/AdminSignup";
 import AdminFaculty from "./components/AdminFaculty";
 import AboutUs from "./components/AboutUs";
 import RecomendedCourses from "./components/RecomendedCourses";
+import Loading from "./components/Loading";
+import VerificationPrompt from "./components/VerificationPrompt";
+import ForgotPasswordPage from "./components/ForgotPasswordPage";
+import ResetPasswordPage from "./components/ResetPasswordPage ";
+
 // import NavBar from "../components/NavBar";
 
 // import Loading from "./components/Loading"
@@ -27,10 +33,15 @@ function App() {
       <Routes>
         <Route index element={<Homepage />} />
         <Route path="/aboutus" element={<AboutUs />} />
+        
         <Route path="/faculty" element={<Faculty />}>
           <Route index element={<Navigate replace to={"login"} />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="signup" element={<SignupPage />} />
+          <Route path="verify-prompt" element={<VerificationPrompt />} />
+          <Route path="verify/:id/:secretString" element={<VerificationPage />} />
+          <Route path="forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="reset-password/:userId/:token" element={<ResetPasswordPage />} />
           <Route path="profile/:id" element={<FacultyProfileView />} />
           <Route path="profile/edit/:userid" element={<FacultyProfileEdit />} />
           <Route path="profile/new" element={<FacultyProfileEdit />} />

@@ -6,24 +6,24 @@ const BasicInformationSchema = new mongoose.Schema({
     },
     full_name: {
         type: String,
-        required: true
+        // required: true
     },
     date_of_birth: {
         type: Date,
-        required: true
+        // required: true
     },
     gender: {
         type: String,
         enum: ["Male", "Female", "Other"],
-        required: false
+        // required: false
     },
     contact_number: {
         type: String,
-        required: true
+        // required: true
     },
     email_address: {
         type: String,
-        required: true
+        // required: true
     }
 });
 
