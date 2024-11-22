@@ -1,7 +1,7 @@
 // import { useOutletContext  } from "react-router-dom";
 // import Button from "../components/Button";
 import axios from "axios";
-import SideBar from "../components/SideBar";
+import AdminSideBar from "../components/AdminSideBar";
 import { useEffect, useState } from "react";
 import FacultyList from "./FacultyList";
 // import { useState } from "react";
@@ -26,7 +26,7 @@ function AdminDashboard() {
 
   return (
     <>
-      <SideBar />
+      <AdminSideBar />
       <div className="bg-[#f4f4f4]">
         <div className="ml-56 mt-14 pt-4 px-14 text-[#212529] h-full ">
           <h1 className="text-xl font-semibold pl-2 ">Admin Dashboard</h1>

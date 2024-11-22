@@ -12,19 +12,19 @@ const ProfessionalInformationSchema = new mongoose.Schema({
     designation: {
         type: String,
         enum: ["Professor", "Assistant Professor", "Associate Professor", "Lecturer"],
-        required: true
+        // required: true
     },
     department: {
         type: String,
-        required: true
+        // required: true
     },
     date_of_joining: {
         type: Date,
-        required: true
+        // required: true
     },
     qualification: {
         type: String,
-        required: true
+        // required: true
     },
     specialization: {
         type: String,

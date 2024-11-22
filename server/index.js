@@ -19,7 +19,10 @@ const port = 5000;
 const app = express();
 
 connectToMongoDB("mongodb://localhost:27017/Project");
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000", // Update this to your frontend's origin
+  credentials: true, // Enable credentials (cookies)
+}));
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: false }));

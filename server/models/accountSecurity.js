@@ -12,11 +12,11 @@ const AccountSecuritySchema = new mongoose.Schema({
     security_question: {
         type: String,
         enum: ["What is your mother's maiden name?", "What was your first pet's name?", "What was the name of your first school?","What is your favorite color?"],
-        required: true
+        // required: true
     },
     security_answer: {
         type: String,
-        required: true
+        // required: true
     }
 });
 

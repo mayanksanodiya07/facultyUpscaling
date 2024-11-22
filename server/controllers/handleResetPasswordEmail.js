@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 
 function sendResetPasswordEmail({ _id, email }, res) {
   const uniqueString = uuidv4() + _id; // Generate unique token
-
+console.log("out:", _id)
   const mailOption = {
     from: process.env.AUTH_EMAIL,
     to: email,
@@ -65,6 +65,8 @@ function sendResetPasswordEmail({ _id, email }, res) {
   bcrypt
     .hash(uniqueString, saltRounds)
     .then(async (hashUniqueString) => {
+      await resetPasswordSchema.deleteOne({ userId: _id });
+
       // Save reset token in the database
       await resetPasswordSchema.insertMany([
         {

@@ -22,6 +22,10 @@ const Facultyschema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  profileCompleted: {
+    type: Boolean,
+    default: false,
+  },
   basicInfo: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "BasicInformation",

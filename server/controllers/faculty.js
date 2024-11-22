@@ -11,7 +11,10 @@ const bcrypt = require("bcrypt");
 
 const { sendVerificationEmail } = require("./handleVerificationEmail");
 const { sendResetPasswordEmail } = require("./handleResetPasswordEmail");
+
 const { v4: uuidv4 } = require("uuid");
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 const { spawn } = require("child_process");
 const Appraisal = require("../models/apprisal");
@@ -20,7 +23,7 @@ const insertAllDetails = async (req, res) => {
   try {
     const { formData } = req.body;
     const userId = req.params.id;
-    console.log(req.body);
+
     const {
       basic_information,
       professional_information,
@@ -29,35 +32,79 @@ const insertAllDetails = async (req, res) => {
       optional_questions,
     } = formData;
 
-    const basicInfo = new basicInformationSchema(basic_information);
-    const professionalInfo = new professionalInformationSchema(
-      professional_information
-    );
-    const addressInfo = new addressDetailsSchema(address_details);
-    const accountSecurityInfo = new accountSecuritySchema(account_security);
-    const optionalQuestionsInfo = new optionalQuestionsSchema(
-      optional_questions
-    );
+    let basicInfo;
+    const existingBasicInfo = await basicInformationSchema.findOne({
+      userId: userId,
+    });
+    
+    if (existingBasicInfo) {
+      basicInfo = existingBasicInfo;
+      basicInfo.set(basic_information);
+    } else {
+      basicInfo = new basicInformationSchema(basic_information);
+    }
+    await basicInfo.save();
 
-    const savedBasicInfo = await basicInfo.save();
-    const savedProfessionalInfo = await professionalInfo.save();
-    const savedAddressInfo = await addressInfo.save();
-    const savedAccountSecurityInfo = await accountSecurityInfo.save();
-    const savedOptionalQuestionsInfo = await optionalQuestionsInfo.save();
+    let professionalInfo;
+    const existingProfessionalInfo =
+      await professionalInformationSchema.findOne({ userId: userId });
+    if (existingProfessionalInfo) {
+      professionalInfo = existingProfessionalInfo;
+      professionalInfo.set(professional_information);
+    } else {
+      professionalInfo = new professionalInformationSchema(
+        professional_information
+      );
+    }
+    await professionalInfo.save();
+
+    let addressInfo;
+    const existingAddressInfo = await addressDetailsSchema.findOne({
+      userId: userId,
+    });
+    if (existingAddressInfo) {
+      addressInfo = existingAddressInfo;
+      addressInfo.set(address_details);
+    } else {
+      addressInfo = new addressDetailsSchema(address_details);
+    }
+    await addressInfo.save();
+
+    let accountSecurityInfo;
+    const existingAccountSecurityInfo = await accountSecuritySchema.findOne({
+      userId: userId,
+    });
+    if (existingAccountSecurityInfo) {
+      accountSecurityInfo = existingAccountSecurityInfo;
+      accountSecurityInfo.set(account_security);
+    } else {
+      accountSecurityInfo = new accountSecuritySchema(account_security);
+    }
+    await accountSecurityInfo.save();
+
+    let optionalQuestionsInfo;
+    const existingOptionalQuestionsInfo = await optionalQuestionsSchema.findOne(
+      { userId: userId }
+    );
+    if (existingOptionalQuestionsInfo) {
+      optionalQuestionsInfo = existingOptionalQuestionsInfo;
+      optionalQuestionsInfo.set(optional_questions);
+    } else {
+      optionalQuestionsInfo = new optionalQuestionsSchema(optional_questions);
+    }
+    await optionalQuestionsInfo.save();
 
     await facultySchema.findByIdAndUpdate(
       userId,
       {
-        basicInfo: savedBasicInfo._id,
-        professionalInfo: savedProfessionalInfo._id,
-        addressInfo: savedAddressInfo._id,
-        accountSecurityInfo: savedAccountSecurityInfo._id,
-        optionalQuestionsInfo: savedOptionalQuestionsInfo._id,
+        basicInfo: basicInfo._id,
+        professionalInfo: professionalInfo._id,
+        addressInfo: addressInfo._id,
+        accountSecurityInfo: accountSecurityInfo._id,
+        optionalQuestionsInfo: optionalQuestionsInfo._id,
       },
       { new: true }
     );
-
-    // Send success response
     res.status(201).send({ message: "All details inserted successfully." });
   } catch (error) {
     console.error(error);
@@ -89,15 +136,28 @@ async function handleFacultyLogin(req, res) {
       return res.status(401).json({ message: "Incorrect password." });
     }
 
-    // Update last login timestamp and send response
+    // Update last login timestamp
     await facultySchema.findByIdAndUpdate(existingUser._id, {
       lastUpdate: Date.now(),
     });
 
-    console.log("Logged in successfully");
-    res
-      .status(200)
-      .json({ objId: existingUser._id, message: "Logged in successfully" });
+    const secretkey = "Pass@34##";
+    const token = jwt.sign({ userId: existingUser._id }, secretkey, {
+      expiresIn: "1h",
+    });
+
+    // Set the token as an HTTP-only cookie
+    res.cookie("authToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      sameSite: "Lax", // or "Strict" to prevent CSRF
+      maxAge: 60 * 60 * 1000, // 1 hour
+    });
+
+    res.status(200).json({
+      message: "Logged in successfully",
+      user: existingUser,
+    });
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).json({ message: "An error occurred during login." });
@@ -143,6 +203,7 @@ async function handlePostFacultyProfile(req, res) {
   const existingUser = await facultySchema.findOne({ _id: userid });
   if (existingUser) {
     insertAllDetails(req, res);
+    await facultySchema.findByIdAndUpdate(userid, { profileCompleted: true });
   } else {
     console.log("no user exist");
   }
@@ -150,7 +211,6 @@ async function handlePostFacultyProfile(req, res) {
 
 async function handleGetFacultyProfile(req, res) {
   const userId = req.params.id;
-  // console.log(userId);
   try {
     const facultyWithProfile = await facultySchema
       .findById(userId)
@@ -161,14 +221,19 @@ async function handleGetFacultyProfile(req, res) {
         { path: "accountSecurityInfo" },
         { path: "optionalQuestionsInfo" },
       ]);
+
     const userDetails = {
-      basicInfo: facultyWithProfile?.basicInfo?._doc,
-      professionalInfo: facultyWithProfile?.professionalInfo?._doc,
-      addressInfo: facultyWithProfile?.addressInfo?._doc,
-      accountSecurityInfo: facultyWithProfile?.accountSecurityInfo?._doc,
-      optionalQuestionsInfo: facultyWithProfile?.optionalQuestionsInfo?._doc,
+      basic_information: facultyWithProfile?.basicInfo?._doc || {},
+      professional_information:
+        facultyWithProfile?.professionalInfo?._doc || {},
+      address_details: facultyWithProfile?.addressInfo?._doc || {},
+      account_security: facultyWithProfile?.accountSecurityInfo?._doc || {},
+      optional_questions: facultyWithProfile?.optionalQuestionsInfo?._doc || {},
     };
-    res.status(200).send(userDetails);
+
+    const profileComplete = facultyWithProfile?.profileCompleted;
+
+    res.status(200).send({ profileComplete, userDetails });
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: "Error fetching user details" });
@@ -182,11 +247,12 @@ async function handleFacultyAppraisal(req, res) {
   try {
     const existingUser = await facultySchema.findOne({ _id: id });
     if (existingUser) {
+      // console.log(existingUser)
       const apprisal = new apprisalSchema({
         facultyId: id,
         responses,
       });
-      console.log(apprisal);
+      // console.log(apprisal);
       const savedApprisal = await apprisal.save();
       await facultySchema.findByIdAndUpdate(
         id,
@@ -195,7 +261,6 @@ async function handleFacultyAppraisal(req, res) {
         },
         { new: true }
       );
-
       const pythonProcess = spawn("python", ["script.py"]);
 
       pythonProcess.stdout.on("data", (data) => {
@@ -216,50 +281,70 @@ async function handleFacultyAppraisal(req, res) {
       pythonProcess.on("close", (code) => {
         console.log(`Python process exited with code ${code}`);
       });
+      // res.status(200)
+      res.status(200).json({
+        message: "Appraisal submitted successfully",
+        apprisal: savedApprisal,
+      });
     } else {
       console.log("no user exist");
     }
-  } catch {}
+  } catch {
+    console.error("Error handling faculty appraisal:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 }
 
 async function handleFacultyRec(req, res) {
-  const userid = req.params.id;
+  const userId = req.params.id;
 
   try {
-    const existingUser = await facultySchema.findOne({ _id: userid });
+    const facultyWithRecCourses = await facultySchema
+      .findById(userId)
+      .populate([
+        { path: "apprisalResponses" },
+        { path: "basicInfo" },
+        { path: "professionalInfo" },
+      ]);
+    // console.log(facultyWithRecCourses.apprisalResponses);
 
-    const responses = await apprisalSchema.findById(
-      existingUser.apprisalResponses
-    );
-    console.log("QQQQ", responses.Recommendations);
-    res.send(responses.Recommendations);
-  } catch {}
+    res.status(200).send({ facultyWithRecCourses });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "Error fetching user details" });
+  }
 }
 
 async function handleVerification(req, res) {
   const { id, secretString } = req.params;
-
+// console.log(req.params)
+console.log(secretString)
   try {
     // Find the verification record using the user ID
     const verificationRecord = await userVerificationSchema.findOne({
       userId: id,
     });
+    // console.log(verificationRecord);
 
     if (!verificationRecord) {
-      return res
-        .status(400)
-        .json({ message: "Invalid or expired verification link." });
+      return (
+        res
+          .status(400)
+          // .json({ message: "Invalid or expired verification link." });
+          .json({ message: "Your email has been successfully verified!" })
+      );
     }
 
     const currentTime = Date.now();
     if (currentTime > verificationRecord.expiredAt) {
-      await facultySchema.findByIdAndDelete(id); // Delete user from User schema
+      // await facultySchema.findByIdAndDelete(id); // Delete user from User schema
       return res
         .status(400)
         .json({ message: "Verification link has expired." });
     }
 
     // Compare the hashed unique string with the one sent in the URL
+    // console.log("okokok", secretString)
     const isMatch = await bcrypt.compare(
       secretString,
       verificationRecord.secretString
@@ -272,7 +357,6 @@ async function handleVerification(req, res) {
     if (!user) {
       return res.status(400).json({ message: "User not found." });
     }
-
     await facultySchema.findByIdAndUpdate(id, { verified: true });
 
     // Delete the verification record after successful verification
@@ -289,7 +373,7 @@ async function handleVerification(req, res) {
 
 async function handleForgetPassword(req, res) {
   const { email } = req.body;
-  
+
   try {
     const user = await facultySchema.findOne({ email });
     if (!user) {
@@ -297,7 +381,6 @@ async function handleForgetPassword(req, res) {
     }
 
     sendResetPasswordEmail(user, res);
-
   } catch (error) {
     console.error("Error in forgot password:", error);
     res.status(500).json({ message: "An error occurred." });
@@ -307,7 +390,7 @@ async function handleForgetPassword(req, res) {
 async function handleResetPassword(req, res) {
   const { userId, token } = req.params;
   const { newPassword } = req.body;
-
+  // console.log(req.params);
   try {
     const resetPasswordEntry = await resetPasswordSchema.findOne({ userId });
     if (!resetPasswordEntry) {

@@ -2,7 +2,7 @@ import Spinner from "react-bootstrap/Spinner";
 
 function LoadingSpinner() {
   return (
-    <div className="flex h-screen">
+    <div className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center z-10">
       <Spinner 
         animation="border" 
         variant="danger" 

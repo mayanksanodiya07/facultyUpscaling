@@ -6,9 +6,10 @@ import Admin from "./pages/Admin";
 // import FacultyLoginForm from "./pages/FacultyLoginForm";
 
 import AdminDashboard from "./components/AdminDashboard";
+import Facultydashboard from './components/Facultydashboard';
 import ApprisalForm from "./components/ApprisalForm";
 import FullFacultyList from "./components/FullFacultyList";
-import LoginPage from "./components/LoginPage";
+import FacutyLoginPage from "./components/FacutyLoginPage";
 import SignupPage from "./components/SignupPage";
 import VerificationPage from "./components/VerificationPage";
 import FacultyProfileEdit from "./components/FacultyProfileEdit";
@@ -22,6 +23,7 @@ import Loading from "./components/Loading";
 import VerificationPrompt from "./components/VerificationPrompt";
 import ForgotPasswordPage from "./components/ForgotPasswordPage";
 import ResetPasswordPage from "./components/ResetPasswordPage ";
+import XCourseRecommendation from "./components/XCourseRecommendation";
 
 // import NavBar from "../components/NavBar";
 
@@ -36,16 +38,18 @@ function App() {
         
         <Route path="/faculty" element={<Faculty />}>
           <Route index element={<Navigate replace to={"login"} />} />
-          <Route path="login" element={<LoginPage />} />
+          <Route path="login" element={<FacutyLoginPage />} />
           <Route path="signup" element={<SignupPage />} />
           <Route path="verify-prompt" element={<VerificationPrompt />} />
           <Route path="verify/:id/:secretString" element={<VerificationPage />} />
           <Route path="forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="reset-password/:userId/:token" element={<ResetPasswordPage />} />
+          <Route path="reset-password/:id/:token" element={<ResetPasswordPage />} />
+          <Route path="dashboard/:id" element={<Facultydashboard />} />
           <Route path="profile/:id" element={<FacultyProfileView />} />
-          <Route path="profile/edit/:userid" element={<FacultyProfileEdit />} />
+          <Route path="profile/edit/:id" element={<FacultyProfileEdit />} />
           <Route path="profile/new" element={<FacultyProfileEdit />} />
-          <Route path="apprisal/:id" element={<ApprisalForm />} />
+          <Route path="appraisal-form/:id" element={<ApprisalForm />} />
+          <Route path="courses-recommended/:id" element={<XCourseRecommendation />} />
           <Route
             path="recommendedcourses/:id"
             element={<RecomendedCourses />}

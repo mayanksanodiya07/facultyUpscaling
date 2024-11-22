@@ -161,7 +161,7 @@ recommendations_list = []
 recommendations=[]
 
 for index, faculty_row in faculty_data.iterrows():
-    print(faculty_row.responses["Q1"])
+    print(faculty_row.responses)
     combined_info = f"{faculty_row.responses["Q1"] } {faculty_row.responses['Q3']} {faculty_row.responses['Q8']} {faculty_row.responses['Q6']} {faculty_row.responses['Q7']} {faculty_row.responses['Q10']} {faculty_row.responses['Q13']} {faculty_row.responses['Q14']}".strip()
     recommended_courses = recommend(combined_info)
     recommendations.append(recommended_courses)

@@ -3,6 +3,7 @@ import Button from "../components/Button";
 import NavBar from "../components/NavBar";
 import Section from "../components/Section";
 import { Outlet, useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 
 function Homepage() {
   const navigate = useNavigate();
@@ -31,11 +32,11 @@ function Homepage() {
               </NavDropdown.Item>
             </NavDropdown> */}
           </Nav>
-          <Nav>
-            <Button type={"small"} to={"/login"}>
+          <Nav className="flex gap-4 mr-8">
+            <Button type={"small"} to={"/faculty/login"}>
               Login
             </Button>
-            <Button type={"small"} to={"/signup"}>
+            <Button type={"small"} to={"/faculty/signup"}>
               Signup
             </Button>
           </Nav>
@@ -43,7 +44,7 @@ function Homepage() {
       </NavBar>
       <Main>
         <Section>
-          <div className="flex flex-col items-center pt-20">
+          <div className="flex flex-col items-center pt-20 mt-14">
             <h1 className="homepage-title text-5xl font-bold mb-3 ">
               Welcome to 🔖SkillPathway
             </h1>
@@ -81,6 +82,7 @@ function Homepage() {
           </div>
         </Section>
       </Main>
+      <Footer/>
     </>
   );
 }

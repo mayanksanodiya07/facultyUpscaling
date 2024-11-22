@@ -1,31 +1,32 @@
-import FloatingLabel from "react-bootstrap/FloatingLabel";
-import Form from "react-bootstrap/Form";
-
 function Questions({ question, selectedAnswer, onResponseChange }) {
-  function handleSelectChange(e) {
+  const handleSelectChange = (e) => {
     onResponseChange(question.code, e.target.value);
-  }
+  };
 
   return (
-    <FloatingLabel
-      controlId="floatingSelect"
-      label={question.question}
-      className="whitespace-normal text-wrap"
-    >
-      <Form.Select
-        aria-label="Floating label select example"
-        value={selectedAnswer}
-        onChange={handleSelectChange}
-        name={question.code} // Adding name attribute for backend access
-      >
-        <option>Choose...</option>
-        {question.answers.map((answer, index) => (
-          <option key={index} value={answer}>
-            {answer}
-          </option>
-        ))}
-      </Form.Select>
-    </FloatingLabel>
+    <div className="mb-2">
+      {/* Question Label */}
+      <label className="block text-gray-700 text-sm font-medium mb-2">
+        {question.question}
+      </label>
+      
+      {/* Answer Dropdown */}
+      <div className="relative">
+        <select
+          className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={selectedAnswer}
+          onChange={handleSelectChange}
+          name={question.code}
+        >
+          <option>Choose...</option>
+          {question.answers.map((answer, index) => (
+            <option key={index} value={answer}>
+              {answer}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
   );
 }
 

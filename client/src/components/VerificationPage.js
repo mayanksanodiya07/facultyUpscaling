@@ -54,10 +54,10 @@ const VerificationPage = () => {
         )}
         {status === 'error' && (
           <button
-            onClick={() => navigate('/faculty/signup')}
+            onClick={() => navigate('/faculty/Login')}
             className="mt-6 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition"
           >
-            Go to Signup
+            Go to Login
           </button>
         )}
       </div>

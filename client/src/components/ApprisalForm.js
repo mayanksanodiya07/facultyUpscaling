@@ -1,14 +1,10 @@
-// import { Nav, NavDropdown } from "react-bootstrap";
-// import NavBar from "../components/NavBar";
-import Questions from "../components/Questions";
-import Section from "../components/Section";
-import Button from "../components/Button";
 import { useState } from "react";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
-import { useLocalStorageState } from "../hooks/useLocalStorageState";
-import axios from "axios"; // Import axios for API requests
 import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import Section from "../components/Section";
+import Questions from "../components/Questions";
+import Button from "../components/Button";
+import Footer from "./Footer";
 
 const facultyAppraisalQuestions0 = [
   {
@@ -240,62 +236,76 @@ const facultyAppraisalQuestions = [
   }
 ];
 
+
 function ApprisalForm() {
   const [responses, setResponses] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
-  // const [usersData, setUsersData] = useLocalStorageState([], "UserData");
-  // const [userName, setUserName] = useState("");
   const { id } = useParams();
 
-  function handleResponseChange(question, answer) {
+  const handleResponseChange = (questionCode, answer) => {
     setResponses((prevResponses) => ({
       ...prevResponses,
-      [question]: answer,
+      [questionCode]: answer,
     }));
-  }
+  };
 
-  async function handleSubmit(event) {
-    event.preventDefault(); // Prevent the default form submission
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setError(null);
+
     try {
-      const response = await axios.post(
-        `http://localhost:5000/faculty/apprisal`,
-        {
-          id,
-          responses,
-        }
-      );
-      console.log(response.data); // Handle the response as needed
+      await axios.post(`http://localhost:5000/faculty/apprisal`, {
+        id,
+        responses,
+      });
+      console.log("right")
       setResponses({});
+      navigate(`/faculty/courses-recommended/${id}`);
     } catch (error) {
+      setError("An error occurred while submitting the form. Please try again.");
       console.error("Error submitting the form:", error);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <>
-      <Section>
-        <form onSubmit={handleSubmit}>
-          <h1>Apprisal form</h1>
-          <div className="relative mx-60 mt-20 mb-28">
-            <div className="grid gap-6 ">
-              {facultyAppraisalQuestions.map((question, index) => (
-                <Questions
-                  key={index}
-                  question={question}
-                  selectedAnswer={responses[question.code] || "Choose..."}
-                  onResponseChange={handleResponseChange}
+    <Section>
+      <div className="mt-20 mb-4">
+
+      <form onSubmit={handleSubmit}>
+        <h1 className="text-2xl font-bold text-center mb-8">Self-Appraisal Form</h1>
+
+        {/* Error Message */}
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+
+        <div className="mx-auto max-w-3xl">
+          {/* Questions */}
+          <div className="grid gap-6 mb-8">
+            {facultyAppraisalQuestions.map((question, index) => (
+              <Questions
+              key={index}
+                question={question}
+                selectedAnswer={responses[question.code] || "Choose..."}
+                onResponseChange={handleResponseChange}
                 />
               ))}
-            </div>
-            <div>
-              <span className="absolute right-0">
-                <Button type="submit" onClick={()=>navigate(`/faculty/recommendedcourses/${id}`)}>Submit</Button>
-              </span>
-            </div>
           </div>
-        </form>
-      </Section>
-    </>
+
+          {/* Submit Button */}
+          <div className="text-right">
+            <Button type="submit" disabled={loading}>
+              {loading ? "Submitting..." : "Submit"}
+            </Button>
+          </div>
+        </div>
+      </form>
+              </div>
+              <Footer/>
+    </Section>
   );
 }
 

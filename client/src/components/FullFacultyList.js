@@ -1,5 +1,5 @@
 import FacultyStrip from "./FacultyStrip";
-import SideBar from "../components/SideBar";
+import AdminSideBar from "../components/AdminSideBar";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { NavDropdown } from "react-bootstrap";
@@ -36,7 +36,7 @@ function FullFacultyList() {
   return (
     <>
       <div className="mt-14">
-        <SideBar />
+        <AdminSideBar />
       </div>
       <div className=" ml-56 px-5 ">
         <div className="pt-3">
