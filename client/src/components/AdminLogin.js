@@ -1,5 +1,5 @@
 import { Link, useNavigate, useOutletContext } from "react-router-dom";
-import Button from "../components/Button";
+import CustomButton  from "../components/CustomButton";
 import { useState } from "react";
 import axios from "axios";
 import Cookies from 'js-cookie';
@@ -56,7 +56,7 @@ function AdminLogin() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <span className="">
-          <Button type={"small"}>Login</Button>
+          <CustomButton type={"small"}>Login</CustomButton>
         </span>
         <p>{loginStatus}</p>
         <p className="w-fit mx-auto mt-2">

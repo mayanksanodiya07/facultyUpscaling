@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Button from "./Button";
+import CustomButton from "./CustomButton";
 
 function FacultyStrip({ faculty }) {
   const [image, setImage] = useState(null);
@@ -60,9 +60,9 @@ function FacultyStrip({ faculty }) {
         <span className="truncate">{dateOnly}</span>
       </td>
       <td className="py-3 px-2">
-        <Button to={`/admin/faculty/${faculty._id}/profile`} type={"profile"}>
+        <CustomButton to={`/admin/faculty/${faculty._id}/profile`} type={"profile"}>
           View Profile
-        </Button>
+        </CustomButton>
       </td>
     </tr>
   );

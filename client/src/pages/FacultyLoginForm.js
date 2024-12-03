@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Button from "../components/Button";
+import CustomButton from "../components/CustomButton";
 import defaultProfilePic from "../data/profile-icon.jpg";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -225,11 +225,11 @@ function Profile() {
               alt="Profile"
             />
           </div>
-          <Button type={"button"}>
+          <CustomButton type={"button"}>
             <label htmlFor="profilePic" className="cursor-pointer">
               Upload image
             </label>
-          </Button>
+          </CustomButton>
           <input
             className="hidden"
             type="file"
@@ -258,7 +258,7 @@ function Profile() {
             ))}
           </div>
 
-          <Button type="submit">Submit</Button>
+          <CustomButton type="submit">Submit</CustomButton>
         </form>
       </div>
     </>

@@ -11,7 +11,7 @@ const VerificationPage = () => {
   useEffect(() => {
     const verifyEmail = async () => {
       try {
-        const response = await axios.get(
+        const response = await axios.post(
           `http://localhost:5000/faculty/verify/${id}/${secretString}`
         );
         setMessage(response.data.message);
@@ -27,7 +27,7 @@ const VerificationPage = () => {
     };
 
     verifyEmail();
-  }, [id, secretString]);
+  }, []);
 
   const handleRedirect = () => {
     navigate('/faculty/login'); // Redirect to the login page

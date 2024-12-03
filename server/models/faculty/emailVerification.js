@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 // console.log(mongoose)
 
 // Create Schema
-const userVerificationSchema = new mongoose.Schema({
+const emailVerificationSchema = new mongoose.Schema({
   userId: {
     type: String,
     // ref: "faculty",
@@ -15,17 +15,17 @@ const userVerificationSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now, 
-    index: { expires: '15s' },
+    // index: { expires: '15s' },
   },
   expiredAt: {
     type: Date,
-    default: Date.now,
+    default: () => new Date(Date.now() + (3600 * 1000)),
   },
 });
 
-const userVerification = new mongoose.model(
-  "userVerification",
-  userVerificationSchema
+const emailVerification = new mongoose.model(
+  "emailVerification",
+  emailVerificationSchema
 );
 
-module.exports = userVerification;
+module.exports = emailVerification;

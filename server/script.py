@@ -83,10 +83,10 @@ def recommend(course, n_recommendations=6):
 
 # MongoDB Connection
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-mydb = myclient["Project"]
+mydb = myclient["faculty"]
 mycol = mydb["apprisals"]
 faculty_data = pd.DataFrame(list(mycol.find()))
-
+print(mydb)
 # Process faculty responses and generate recommendations
 recommendations_list = []
 for index, faculty_row in faculty_data.iterrows():

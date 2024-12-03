@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import Button from "../components/Button";
+import CustomButton from "../components/CustomButton";
 
 function VerificationPrompt() {
   const location = useLocation();
@@ -14,9 +14,9 @@ function VerificationPrompt() {
           A verification link has been sent to <strong>{email}</strong>.
           Please check your inbox and click the link to verify your email address.
         </p>
-        <Button onClick={() => navigate("/faculty/login")} type="small">
+        <CustomButton onClick={() => navigate("/faculty/login")} type="small">
           Go to Login
-        </Button>
+        </CustomButton>
       </div>
     </div>
   );

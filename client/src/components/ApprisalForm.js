@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Section from "../components/Section";
-import Questions from "../components/Questions";
-import Button from "../components/Button";
+import CustomButton from "../components/CustomButton";
 import Footer from "./Footer";
+import Select from "react-select";
 
 const facultyAppraisalQuestions0 = [
   {
@@ -67,7 +67,6 @@ const facultyAppraisalQuestions0 = [
     answers: ["Male", "Female", "Non-binary", "Prefer not to say"],
   },
 ];
-
 const facultyAppraisalQuestions = [
   {
     code: "Q1",
@@ -77,8 +76,8 @@ const facultyAppraisalQuestions = [
       "Data Science",
       "Software Engineering",
       "Cybersecurity",
-      "Cloud Computing"
-    ]
+      "Cloud Computing",
+    ],
   },
   {
     code: "Q2",
@@ -88,19 +87,20 @@ const facultyAppraisalQuestions = [
       "Intermediate",
       "Advanced",
       "Expert",
-      "No Research Experience"
-    ]
+      "No Research Experience",
+    ],
   },
   {
     code: "Q3",
-    question: "Which technology are you most interested in learning more about?",
+    question:
+      "Which technology are you most interested in learning more about?",
     answers: [
       "Machine Learning",
       "Blockchain",
       "IoT (Internet of Things)",
       "AR/VR (Augmented/Virtual Reality)",
-      "Quantum Computing"
-    ]
+      "Quantum Computing",
+    ],
   },
   {
     code: "Q4",
@@ -110,8 +110,8 @@ const facultyAppraisalQuestions = [
       "Research Development",
       "New Skills Acquisition",
       "Personal Interest",
-      "Academic Progress"
-    ]
+      "Academic Progress",
+    ],
   },
   {
     code: "Q5",
@@ -121,30 +121,18 @@ const facultyAppraisalQuestions = [
       "Workshops",
       "Reading Research Papers",
       "Hands-on Projects",
-      "Seminars/Webinars"
-    ]
+      "Seminars/Webinars",
+    ],
   },
   {
     code: "Q6",
     question: "Which of the following tools do you actively use in your work?",
-    answers: [
-      "Python",
-      "MATLAB",
-      "R",
-      "SQL",
-      "TensorFlow/PyTorch"
-    ]
+    answers: ["Python", "MATLAB", "R", "SQL", "TensorFlow/PyTorch"],
   },
   {
     code: "Q7",
     question: "Which programming languages are you comfortable working with?",
-    answers: [
-      "Python",
-      "Java",
-      "C++",
-      "JavaScript",
-      "R"
-    ]
+    answers: ["Python", "Java", "C++", "JavaScript", "R"],
   },
   {
     code: "Q8",
@@ -154,8 +142,8 @@ const facultyAppraisalQuestions = [
       "Cloud Technologies",
       "Project Management",
       "Mobile Application Development",
-      "Network Security"
-    ]
+      "Network Security",
+    ],
   },
   {
     code: "Q9",
@@ -165,19 +153,13 @@ const facultyAppraisalQuestions = [
       "Web Development",
       "Embedded Systems",
       "Big Data Projects",
-      "Cloud Infrastructure"
-    ]
+      "Cloud Infrastructure",
+    ],
   },
   {
     code: "Q10",
     question: "Which research publications do you follow?",
-    answers: [
-      "IEEE",
-      "Springer",
-      "Elsevier",
-      "ACM",
-      "Wiley"
-    ]
+    answers: ["IEEE", "Springer", "Elsevier", "ACM", "Wiley"],
   },
   {
     code: "Q11",
@@ -187,8 +169,8 @@ const facultyAppraisalQuestions = [
       "Reading Research Papers",
       "Watching Online Tutorials",
       "Following Thought Leaders",
-      "Engaging in Peer Discussions"
-    ]
+      "Engaging in Peer Discussions",
+    ],
   },
   {
     code: "Q12",
@@ -198,8 +180,8 @@ const facultyAppraisalQuestions = [
       "Academic Collaboration",
       "Research Collaboration",
       "Open Source Contributions",
-      "Consultancy"
-    ]
+      "Consultancy",
+    ],
   },
   {
     code: "Q13",
@@ -209,8 +191,8 @@ const facultyAppraisalQuestions = [
       "Leadership",
       "Time Management",
       "Teamwork",
-      "Problem-Solving"
-    ]
+      "Problem-Solving",
+    ],
   },
   {
     code: "Q14",
@@ -220,8 +202,8 @@ const facultyAppraisalQuestions = [
       "Certified Data Scientist",
       "Certified Ethical Hacker",
       "PMP (Project Management Professional)",
-      "Google Cloud Certified"
-    ]
+      "Google Cloud Certified",
+    ],
   },
   {
     code: "Q15",
@@ -231,11 +213,10 @@ const facultyAppraisalQuestions = [
       "Quantitative Research",
       "Mixed Methods",
       "Experimental Research",
-      "Theoretical Research"
-    ]
-  }
+      "Theoretical Research",
+    ],
+  },
 ];
-
 
 function ApprisalForm() {
   const [responses, setResponses] = useState({});
@@ -244,10 +225,10 @@ function ApprisalForm() {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const handleResponseChange = (questionCode, answer) => {
+  const handleResponseChange = (questionCode, selectedOption) => {
     setResponses((prevResponses) => ({
       ...prevResponses,
-      [questionCode]: answer,
+      [questionCode]: selectedOption?.value,
     }));
   };
 
@@ -261,11 +242,12 @@ function ApprisalForm() {
         id,
         responses,
       });
-      console.log("right")
       setResponses({});
       navigate(`/faculty/courses-recommended/${id}`);
     } catch (error) {
-      setError("An error occurred while submitting the form. Please try again.");
+      setError(
+        "An error occurred while submitting the form. Please try again."
+      );
       console.error("Error submitting the form:", error);
     } finally {
       setLoading(false);
@@ -273,40 +255,66 @@ function ApprisalForm() {
   };
 
   return (
-    <Section>
+    <>
       <div className="mt-20 mb-4">
+        <form onSubmit={handleSubmit}>
+          <h1 className="text-2xl font-bold text-center mb-8">
+            Self-Appraisal Form
+          </h1>
 
-      <form onSubmit={handleSubmit}>
-        <h1 className="text-2xl font-bold text-center mb-8">Self-Appraisal Form</h1>
+          {/* Error Message */}
+          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-        {/* Error Message */}
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-
-        <div className="mx-auto max-w-3xl">
-          {/* Questions */}
-          <div className="grid gap-6 mb-8">
-            {facultyAppraisalQuestions.map((question, index) => (
-              <Questions
-              key={index}
-                question={question}
-                selectedAnswer={responses[question.code] || "Choose..."}
-                onResponseChange={handleResponseChange}
-                />
+          <div className="mx-auto max-w-3xl">
+            {/* Questions */}
+            <div className="grid gap-6 mb-8">
+              {facultyAppraisalQuestions.map((question, index) => (
+                <>
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    {question.question}
+                  </label>
+                  
+                  <Select
+                    options={question.answers.map((answer) => ({
+                      value: answer,
+                      label: answer,
+                    }))}
+                    onChange={(selectedOption) =>
+                      handleResponseChange(question.code, selectedOption)
+                    }
+                    value={
+                      responses[question.code]
+                        ? {
+                            value: responses[question.code],
+                            label: responses[question.code],
+                          }
+                        : null
+                    }
+                    placeholder="Choose..."
+                  />
+                </>
               ))}
-          </div>
+            </div>
 
-          {/* Submit Button */}
-          <div className="text-right">
-            <Button type="submit" disabled={loading}>
-              {loading ? "Submitting..." : "Submit"}
-            </Button>
+            {/* Submit  */}
+            <div className="text-right">
+              <CustomButton type="submit" disabled={loading}>
+                {loading ? "Submitting..." : "Submit"}
+              </CustomButton>
+            </div>
           </div>
-        </div>
-      </form>
-              </div>
-              <Footer/>
-    </Section>
+        </form>
+      </div>
+    </>
   );
 }
 
 export default ApprisalForm;
+{
+  /* <Questions
+key={index}
+question={question}
+selectedAnswer={responses[question.code] || "Choose..."}
+onResponseChange={handleResponseChange}
+/> */
+}

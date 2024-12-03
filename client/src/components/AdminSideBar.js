@@ -36,7 +36,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faListUl, faGear, faClipboardCheck, faChartLine, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
-
+import CustomButton from "./CustomButton";
 function AdminDashboard() {
   const navigate = useNavigate();
 
@@ -92,7 +92,7 @@ function AdminDashboard() {
           </Link>
         </li>
         <li className="py-2 hover:bg-[#272b31]">
-          <button
+          <CustomButton
             onClick={handleLogout}
             className="flex items-center gap-x-3 px-8 w-full text-left"
           >
@@ -100,7 +100,7 @@ function AdminDashboard() {
               <FontAwesomeIcon icon={faSignOutAlt} className="text-base" />
             </span>
             <p>Logout</p>
-          </button>
+          </CustomButton>
         </li>
       </ul>
     </div>

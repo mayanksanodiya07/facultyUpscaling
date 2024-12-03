@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import Button from "../components/Button";
+import CustomButton from "../components/CustomButton";
 import { useState } from "react";
 import axios from "axios";
 
@@ -59,7 +59,7 @@ function AdminSignup() {
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
         <span className="">
-          <Button type={"small"}>SignUp</Button>
+          <CustomButton type={"small"}>SignUp</CustomButton>
         </span>
         <p>{error}</p>
         <p className="w-fit mx-auto mt-2">

@@ -1,7 +1,7 @@
 import { Nav, Navbar, NavDropdown } from "react-bootstrap";
-import Button from "../components/Button";
+import CustomButton from "../components/CustomButton";
 import NavBar from "../components/NavBar";
-import Section from "../components/Section";
+// import Section from "../components/Section";
 import { Outlet, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 
@@ -19,7 +19,13 @@ function Homepage() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="#features">Features</Nav.Link>
-            <Nav.Link onClick={()=>{navigate("/aboutus")}} >AboutUs</Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                navigate("/aboutus");
+              }}
+            >
+              AboutUs
+            </Nav.Link>
             {/* <NavDropdown title="Dropdown" id="collapsible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
@@ -33,29 +39,29 @@ function Homepage() {
             </NavDropdown> */}
           </Nav>
           <Nav className="flex gap-4 mr-8">
-            <Button type={"small"} to={"/faculty/login"}>
+            <CustomButton type={"small"} to={"/faculty/login"}>
               Login
-            </Button>
-            <Button type={"small"} to={"/faculty/signup"}>
+            </CustomButton>
+            <CustomButton type={"small"} to={"/faculty/signup"}>
               Signup
-            </Button>
+            </CustomButton>
           </Nav>
         </Navbar.Collapse>
       </NavBar>
       <Main>
-        <Section>
-          <div className="flex flex-col items-center pt-20 mt-14">
+        <div className="h-screen relative">
+          <div className=" flex flex-col items-center pt-28 ">
             <h1 className="homepage-title text-5xl font-bold mb-3 ">
               Welcome to 🔖SkillPathway
             </h1>
             <p className="text-2xl mb-5">
               Empowering Faculty and Learners to Achieve Excellence
             </p>
-            <Button type={"login"} to={"/apprisal-from"}>
+            <CustomButton type={"login"} to={"/apprisal-from"}>
               Get start
-            </Button>
+            </CustomButton>
           </div>
-          <div className="relative w-full ">
+          <div className=" w-full absolute bottom-0">
             <svg
               className=" "
               xmlns="http://www.w3.org/2000/svg"
@@ -69,7 +75,7 @@ function Homepage() {
             </svg>
 
             <svg
-              className="absolute top-0"
+              className="absolute bottom-0"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 1440 320"
             >
@@ -80,9 +86,9 @@ function Homepage() {
               ></path>
             </svg>
           </div>
-        </Section>
+        </div>
       </Main>
-      <Footer/>
+      <Footer />
     </>
   );
 }

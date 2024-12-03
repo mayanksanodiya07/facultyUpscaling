@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import Button from "../components/Button";
+import CustomButton from "../components/CustomButton";
 import LoadingSpinner from "./Loading";
 
 function ForgotPasswordPage() {
@@ -51,7 +51,7 @@ function ForgotPasswordPage() {
             onChange={(e) => setEmail(e.target.value)}
           />
           <span>
-            <Button type={"small"}>Send Reset Link</Button>
+            <CustomButton type={"small"}>Send Reset Link</CustomButton>
           </span>
           <p className="text-green-500 mt-2">{message}</p>
         </form>

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import OrAuth from "../components/OrAuth";
-import Button from "../components/Button";
+import CustomButton from "../components/CustomButton";
 import { useState } from "react";
 import axios from "axios";
 import Spinner from "react-bootstrap/Spinner"; // Import Spinner from react-bootstrap
@@ -23,7 +23,6 @@ function SignupPage() {
           email,
           password,
         });
-        // Redirect to verification prompt page after signup
         navigate("/faculty/verify-prompt", { state: { email } });
       } catch (err) {
         console.error("error", err?.response?.data);
@@ -72,7 +71,7 @@ function SignupPage() {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
             <span>
-              <Button type={"small"}>SignUp</Button>
+              <CustomButton type={"small"}>SignUp</CustomButton>
             </span>
             <p className="text-red-500">{signupStatus}</p>
             <p className="w-fit mx-auto mt-2">

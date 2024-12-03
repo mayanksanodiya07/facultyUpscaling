@@ -1,4 +1,4 @@
-const userVerificationSchema = require("../models/userVerification");
+const emailVerificationSchema = require("../models/faculty/emailVerification");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const { v4: uuidv4 } = require("uuid");
@@ -13,8 +13,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-function sendVerificationEmail({ _id, email }, res) {
-  const uniqueString = uuidv4() + _id;
+async function sendVerificationEmail({ _id, email }, res) {
+  const uniqueString = uuidv4();
 
   const mailOption = {
     from: process.env.AUTH_EMAIL,
@@ -59,28 +59,27 @@ function sendVerificationEmail({ _id, email }, res) {
       </div>
     `,
   };
-  
 
   const saltRounds = 10;
   bcrypt
-    .hash(uniqueString, saltRounds)
+    .hash((uniqueString+_id), saltRounds)
     .then(async (hashUniqueString) => {
-      await userVerificationSchema.insertMany([
+      await emailVerificationSchema.insertMany([
         {
           userId: _id,
           secretString: hashUniqueString,
           createdAt: Date.now(),
-          expiredAt: Date.now() + 15 * 60 * 1000,
           // expiredAt: Date.now() + 10 * 1000,
         },
       ]);
       await transporter.sendMail(mailOption);
 
-      res.json({
-        message: "Verification mail has been sent",
-      });
     })
-    .catch();
+    .catch(
+      res.json({
+        message: "Error ",
+      })
+    );
 }
 
 module.exports = {

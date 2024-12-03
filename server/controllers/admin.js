@@ -1,5 +1,5 @@
 const adminSchema = require("../models/admin");
-const facultySchema = require("../models/faculty");
+const facultySchema = require("../models/xfacultys");
 const bcrypt = require("bcrypt");
 
 const insertAllDetails = async (req, res) => {

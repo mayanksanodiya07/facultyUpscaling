@@ -24,7 +24,10 @@ const BasicInformationSchema = new mongoose.Schema({
     email_address: {
         type: String,
         // required: true
-    }
+    },
+    profile_image: {
+        type: String,
+    },
 });
 
 const BasicInformation = mongoose.model("BasicInformation", BasicInformationSchema);

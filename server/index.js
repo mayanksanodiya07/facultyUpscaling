@@ -18,15 +18,14 @@ const port = 5000;
 
 const app = express();
 
-connectToMongoDB("mongodb://localhost:27017/Project");
+connectToMongoDB("mongodb://localhost:27017/faculty");
 app.use(cors({
   origin: "http://localhost:3000", // Update this to your frontend's origin
   credentials: true, // Enable credentials (cookies)
 }));
 app.use(express.json());
-
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.urlencoded({ extended: false }));
-
 app.use("/faculty", facultyRoute);
 app.use("/admin", adminRoute);
 
